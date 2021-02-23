@@ -36,6 +36,7 @@ function onCloseButtonClick() {
 
 function closeModal() {
   clearSrcInModalImg();
+  document.removeEventListener("keydown", onChangeImgKey);
   document.removeEventListener("keydown", onEscKeydown);
   ref.modal.classList.remove("is-open");
 }
@@ -46,9 +47,11 @@ function onGalleryItemClick(event) {
   if (!event.target.classList.contains("gallery__image")) {
     return;
   }
+  document.addEventListener("keydown", onChangeImgKey);
   document.addEventListener("keydown", onEscKeydown);
   ref.modal.classList.add("is-open");
   ref.modalImage.src = event.target.dataset.source;
+  ref.modalImage.alt = event.target.alt;
 }
 function creatGallery(galleryItems) {
   return galleryItems
@@ -69,24 +72,26 @@ function creatGallery(galleryItems) {
     })
     .join("");
 }
-function clearSrcInModalImg() {
-  ref.modalImage.src = "";
+
+function onChangeImgKey(event) {
+  const arrOriginalImgSrc = galleryItems.map((item) => item.original);
+  let src = arrOriginalImgSrc.indexOf(ref.modalImage.src);
+
+  if (event.key === "ArrowLeft") {
+    if (src === 0) {
+      src = arrOriginalImgSrc.length - 1;
+    }
+    ref.modalImage.src = arrOriginalImgSrc[src - 1];
+  }
+  if (event.key === "ArrowRight") {
+    if (src === arrOriginalImgSrc.length - 1) {
+      src = 0;
+    }
+    ref.modalImage.src = arrOriginalImgSrc[src + 1];
+  }
 }
 
-// ниже нужно реализовать смену картиник при нажатие клавишь влево вправо.
-
-// let imgModalSrc = ref.modalImage.src;
-
-// const arrOriginalImgSrc = galleryItems.map((item) => item.original);
-
-// document.addEventListener("keydown", onArrowRightKeydown);
-
-// function onArrowRightKeydown(event) {
-//   if (event.key === "ArrowRight") {
-//     ref.modalImage.src = document.querySelector(
-//       `[data-source = '${imgModalSrc}']`
-//     ).nextSibling.dataset.source;
-//   }
-// }
-
-//  ArrowLeft ArrowRight
+function clearSrcInModalImg() {
+  ref.modalImage.src = "";
+  ref.modalImage.alt = "";
+}
