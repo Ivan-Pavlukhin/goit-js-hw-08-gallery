@@ -5,9 +5,8 @@ const ref = {
   modal: document.querySelector(".lightbox"),
   modalImage: document.querySelector(".lightbox__image"),
   closeButton: document.querySelector("[data-action = 'close-lightbox']"),
+  overlay: document.querySelector(".lightbox__overlay"),
 };
-
-const arrOriginalImgSrc = galleryItems.map((item) => item.original);
 
 const imageMarkup = creatGallery(galleryItems);
 
@@ -17,32 +16,28 @@ ref.list.addEventListener("click", onGalleryItemClick);
 
 ref.closeButton.addEventListener("click", onCloseButtonClick);
 
-document.addEventListener("keydown", onArrowRightKeydown);
+ref.overlay.addEventListener("click", onOverlayCloseModalClick);
 
-let imgModalSrc = document.querySelector(".lightbox__image").src;
-
-function onArrowRightKeydown(event) {
-  if (event.key === "ArrowRight") {
-    ref.modalImage.src = document.querySelector(
-      `[data-source = '${imgModalSrc}']`
-    ).nextSibling.dataset.source;
+function onOverlayCloseModalClick(event) {
+  if (event.target === event.currentTarget) {
+    closeModal();
   }
 }
 
 function onEscKeydown(event) {
   if (event.key === "Escape") {
-    ref.modal.classList.remove("is-open");
-    document.removeEventListener("keydown", onEscKeydown);
-    clearSrcInModalImg();
+    closeModal();
   }
 }
 
-//  ArrowLeft ArrowRight
-
 function onCloseButtonClick() {
-  ref.modal.classList.remove("is-open");
-  document.removeEventListener("keydown", onEscKeydown);
+  closeModal();
+}
+
+function closeModal() {
   clearSrcInModalImg();
+  document.removeEventListener("keydown", onEscKeydown);
+  ref.modal.classList.remove("is-open");
 }
 
 function onGalleryItemClick(event) {
@@ -55,11 +50,6 @@ function onGalleryItemClick(event) {
   ref.modal.classList.add("is-open");
   ref.modalImage.src = event.target.dataset.source;
 }
-
-// function clearSrcInModalImg() {
-//   ref.modalImage.src = l;
-// }
-
 function creatGallery(galleryItems) {
   return galleryItems
     .map(({ original, preview, description }) => {
@@ -79,3 +69,24 @@ function creatGallery(galleryItems) {
     })
     .join("");
 }
+function clearSrcInModalImg() {
+  ref.modalImage.src = "";
+}
+
+// ниже нужно реализовать смену картиник при нажатие клавишь влево вправо.
+
+// let imgModalSrc = ref.modalImage.src;
+
+// const arrOriginalImgSrc = galleryItems.map((item) => item.original);
+
+// document.addEventListener("keydown", onArrowRightKeydown);
+
+// function onArrowRightKeydown(event) {
+//   if (event.key === "ArrowRight") {
+//     ref.modalImage.src = document.querySelector(
+//       `[data-source = '${imgModalSrc}']`
+//     ).nextSibling.dataset.source;
+//   }
+// }
+
+//  ArrowLeft ArrowRight
