@@ -79,13 +79,13 @@ function onChangeImgKey(event) {
 
   if (event.key === "ArrowLeft") {
     if (src === 0) {
-      src = arrOriginalImgSrc.length - 1;
+      src = arrOriginalImgSrc.length;
     }
     ref.modalImage.src = arrOriginalImgSrc[src - 1];
   }
   if (event.key === "ArrowRight") {
     if (src === arrOriginalImgSrc.length - 1) {
-      src = 0;
+      src = -1;
     }
     ref.modalImage.src = arrOriginalImgSrc[src + 1];
   }
